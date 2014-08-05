@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<form name="userInfo">
+  <input type="text" name="userName">
+  <input type="text" name="password">
+</form>
+<input type="button" value="Load" id="buttonLoad">
+<input type="button" value="Abort" id="buttonAbort">
+<div id="div1"></div>
+
+<script>
+var btnClick = document.getElementById("buttonLoad");
+btnClick.addEventListener("click",load,false);
+
+var btnAbort = document.getElementById("buttonAbort");
+btnAbort.addEventListener("click",stop,false);
+
+var xhr = null;
+function load(){
+	//步驟一建立XMLHttpRequest物件
+	xhr = new XMLHttpRequest();
+	if(xhr != null){
+		  //url = "Index.jsp";
+		  //url = "http://192.168.23.17:8080/MySite/CORSServlet";
+		var data = new FormData(document.userInfo); 
+		 url = "FormDataServlet";
+		 xhr.open('post',url,true);
+		 xhr.timeout = 5000;
+		 xhr.send(data);		 
+		 
+		 xhr.addEventListener("load",function(){
+			 var data = xhr.responseText;
+			 document.getElementById("div1").innerHTML = data;
+		 },false);
+		 
+		 xhr.addEventListener("timeout",function(){
+			 document.getElementById("div1").innerHTML = "timeout";
+		 },false);
+		 
+		 xhr.addEventListener("abort",function(){
+			 document.getElementById("div1").innerHTML = "abort";
+		 },false);
+		 
+		 
+	}else{
+		alert("無法建立Ajax物件!!");
+	}
+}
+
+function stop(){
+	xhr.abort();
+}
+</script>
+</body>
+</html>

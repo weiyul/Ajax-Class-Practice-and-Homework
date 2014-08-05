@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<script>
+function jsonHandler(data){
+	alert(data[1].name);
+}
+
+//jsonHandler([{"name":"Jack"},{"name":"Tom"}]);
+</script>
+<script src="http://192.168.23.17:8080/MySite/JSONP.jsp?cb=jsonHandler"></script>
+</body>
+</html>

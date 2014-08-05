@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+</head>
+<body>
+<input type="text"><br>
+<input type="text"><br>
+<input type="text"><br>
+<input type="text"><br>
+<input type="button" value="Load" id="buttonLoad">
+<div id="div1"></div>
+
+
+<script>
+//window.addEventListener("load", init, false);
+//function init(){
+   var btnClick = document.getElementById("buttonLoad");
+   //btnClick.onclick = load;
+    btnClick.addEventListener("click",load,false);
+//}
+
+function load(){
+	//步驟一建立XMLHttpRequest物件
+	var xhr = new XMLHttpRequest();
+	if(xhr != null){
+		//步驟二對Server端發出要求(request)
+		xhr.open("get","Index.jsp",false); //false表示同步模式
+		xhr.send();
+		
+		//步驟三接受Server端回傳的結果
+		var data = xhr.responseText;
+		
+		
+		//步驟四顯示資料 DOM
+		var myDiv = document.getElementById("div1");
+		myDiv.innerHTML = "<h2>" +  data + "</h2>";
+		
+		
+		
+	}else{
+		alert("無法建立Ajax物件!!");
+	}
+
+}
+</script>
+</body>
+</html>

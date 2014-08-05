@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+</head>
+<body>
+<form name="MyForm">
+UserName : <input type="text" name="UserName" id="UserName"><br>
+Age : <input type="number" name="Age" id="Age"><br>
+
+</form>
+<input type="button" value="Load" id="buttonLoad">
+<div id="div1"></div>
+
+<script>
+var btnClick = document.getElementById("buttonLoad");
+btnClick.addEventListener("click",load,false);
+
+var xhr = null;
+function load(){
+	var name = MyForm.UserName.value;
+	var age = document.getElementById("Age").value;
+	//步驟一建立XMLHttpRequest物件
+	xhr = new XMLHttpRequest();
+	if(xhr != null){
+		//readyState屬性值改變時，就會觸發readystatechange事件  
+		//readystate 0->1->2->3->4
+		xhr.addEventListener("readystatechange",callback,false);
+
+		//步驟二對Server端發出要求(request)
+		var url = "Parameter.jsp?name=" + name + "&age=" + age;
+		xhr.open("get",url,true); //true表示非同步模式
+		xhr.send();
+		
+		
+	}else{
+		alert("無法建立Ajax物件!!");
+	}
+		
+}
+function callback(){
+	//readyState = 4 表示資料已經全部回傳到client
+	 if(xhr.readyState == 4){
+		var myDiv = document.getElementById("div1");
+		//status = 200表示Server端程式執行沒有錯誤發生
+		if(xhr.status == 200){
+			//步驟三接受Server端回傳的結果
+			var data = xhr.responseText;				
+			//步驟四顯示資料 DOM
+			myDiv.innerHTML = "<h2>" +  data + "</h2>";
+		}else{
+			myDiv.innerHTML = "<h2>" +  xhr.status + ":" + xhr.statusText + "</h2>";
+		}
+	}
+		
+}
+		</script>
+</body>
+</html>

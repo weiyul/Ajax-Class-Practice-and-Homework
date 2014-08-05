@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<employees>
+<employee>
+   <name>Jack</name>
+</employee>
+<employee>
+   <name>Mary</name>
+</employee>
+<employee>
+   <name>Tom</name>
+</employee>
+</employees>

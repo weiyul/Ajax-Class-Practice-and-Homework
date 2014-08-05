@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+.item{
+	width:150px;
+	height:100px;
+	float:left;
+	margin:5px;
+    box-shadow:1px 2px 5px silver;
+	opacity:0.5;
+    
+}
+
+div.item > img{
+	width:150px;
+	height:100px;
+}
+.item:hover{
+	opacity:1;
+    box-shadow:3px 5px 5px silver;
+}
+</style>
+</head>
+<body>
+
+<input type="button" value="Load" id="buttonLoad">
+<div id="div1">
+<!--  
+<div class="item">
+   <img src="http://www.taipeitravel.net/d_upload_ttn/sceneadmin/pic/11002820.jpg" 
+       title="指南宮貓空步道">
+</div>
+<div class="item">
+   <img src="http://www.taipeitravel.net/d_upload_ttn/sceneadmin/pic/11002820.jpg" 
+       title="指南宮貓空步道">
+</div>
+<div class="item">
+   <img src="http://www.taipeitravel.net/d_upload_ttn/sceneadmin/pic/11002820.jpg" 
+       title="指南宮貓空步道">
+</div>-->
+</div>
+
+<script>
+var btnClick = document.getElementById("buttonLoad");
+btnClick.addEventListener("click",load,false);
+
+var xhr = null;
+function load(){
+	
+	
+	
+	//步驟一建立XMLHttpRequest物件
+	xhr = new XMLHttpRequest();
+	if(xhr != null){
+		//readyState屬性值改變時，就會觸發readystatechange事件  
+		//readystate 0->1->2->3->4
+		xhr.addEventListener("readystatechange",callback,false);
+
+		//步驟二對Server端發出要求(request)
+		var url = "data.xml";
+		xhr.open("get",url,true); //true表示非同步模式
+		xhr.send();
+		
+		
+	}else{
+		alert("無法建立Ajax物件!!");
+	}
+		
+}
+function callback(){
+	//readyState = 4 表示資料已經全部回傳到client
+	 if(xhr.readyState == 4){
+		var myDiv = document.getElementById("div1");
+		//status = 200表示Server端程式執行沒有錯誤發生
+		if(xhr.status == 200){
+			//清除原有的資料
+			while(myDiv.hasChildNodes()){
+				myDiv.removeChild(myDiv.firstChild);
+			}
+			
+			//步驟三接受Server端回傳的結果
+			//因為回傳的結果是XML文件，所以改用responseXML接收
+			var data = xhr.responseXML;
+			//data 就是 DOM
+			var rows = data.getElementsByTagName("row");
+			for(var i=0,max=rows.length;i<max;i++){
+				//元素節點之間如有空白，會造成空白的文字節點
+				//所以也要將此空白文字節點當成一個子節點
+			   //console.log(rows[i].childNodes[7].firstChild.nodeValue);
+				
+				//避免去算空白節點
+				//可以使用.getElementsByTagName("stitle")[0]
+				var file = rows[i].getElementsByTagName("file")[0].firstChild.nodeValue;
+				//console.log(file);
+				//將file的xml字串轉成xml dom
+				var parser = new DOMParser();
+				var doc = parser.parseFromString(file,"text/xml");
+				
+				var img = doc.getElementsByTagName("img")[0];
+				var desc = img.getAttribute("description");
+				var imgFile = img.firstChild.nodeValue;
+				
+				//<div class="item"><img src="imgFile" title="desc"></div>
+				var eleImg = document.createElement("img");
+				eleImg.setAttribute("src",imgFile);
+				eleImg.setAttribute("title",desc);
+				
+				var eleDiv = document.createElement("div");
+				eleDiv.className = "item";
+				eleDiv.appendChild(eleImg);
+				
+				myDiv.appendChild(eleDiv);
+				
+				
+				
+				
+				
+				//var body = rows[i].getElementsByTagName("xbody")[0].firstChild.nodeValue;
+				//var address = rows[i].getElementsByTagName("address")[0].firstChild.nodeValue;
+				//var info = rows[i].getElementsByTagName("info")[0].firstChild.nodeValue;
+				//console.log(title);
+				//console.log(body);
+				//console.log(address);
+				//console.log(info);
+				
+			}
+			
+			
+			
+			
+			//步驟四顯示資料 DOM
+			//var titles = data.getElementsByTagName("stitle");
+			//var str = "";
+			//for(var i=0,max=titles.length;i<max;i++){
+				//元素節點
+				//console.log(titles[i].nodeType);  //1
+				//console.log(titles[i].nodeName);  //stitle
+				//console.log(titles[i].nodeValue);  //null
+				//文字節點
+				//console.log(titles[i].firstChild.nodeType);  //3
+				//console.log(titles[i].firstChild.nodeName);  //#text
+				//console.log(titles[i].firstChild.nodeValue);  //title的內容
+				
+				
+				//var title = titles[i].firstChild.nodeValue;
+				//<h2>title</h2>
+				//str += "<h2>" + title + "</h2>";
+			//}
+			//myDiv.innerHTML = str;
+			
+		}else{
+			myDiv.innerHTML = "<h2>" +  xhr.status + ":" + xhr.statusText + "</h2>";
+		}
+	}
+		
+}
+		</script>
+</body>
+</html>

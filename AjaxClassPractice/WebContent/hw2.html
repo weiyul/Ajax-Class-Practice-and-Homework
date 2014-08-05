@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<input type="button" value="load" id="buttonLoad"> 
+<div id="div1">
+
+
+</div>
+<script>
+	var btnClick=document.getElementById("buttonLoad");
+	var btn=btnClick.addEventListener("click", main, false);
+	var div1=document.getElementById("div1");
+	
+	var xhr=null;	
+	function main(){	
+		xhr=new XMLHttpRequest();
+		if(xhr!=null){
+			url="http://localhost:8080/MyFirstAjax/LoadRSS.jsp";
+			xhr.addEventListener("readystatechange", bbb, false);
+			xhr.open("get",url,true);
+			xhr.send();	
+		}else{
+			alert("遊覽器不支援AJAX");			
+			
+		}	
+	}
+	function bbb(){
+		if(xhr.readyState==4){
+			var str="";
+			if(xhr.status==200){
+				//receive XML data
+				var data = xhr.responseXML;	
+				
+				//get the content of <title>, <description>, <image>
+				var href=data.getElementsByTagName("title")[0].firstChild.nodeValue;
+				var description=data.getElementsByTagName("description")[0].firstChild.nodeValue;				
+				var img=data.getElementsByTagName("image")[0].getElementsByTagName("url")[0].firstChild.nodeValue;
+			
+				
+			str+="<img  src='"+img+"' width='' height=''>";	
+			str+="<br>";					
+			str+="<a href='http://udn.com/NEWS/SPORTS/SPO2/'>"+href+"</a>"
+			str+="<br>";			
+			str+="<font size='1px'>"+description+"</font><br>";
+			
+			
+			
+			var item=data.getElementsByTagName("item");
+			for(var i=0,max=item.length;i<max;i++){
+				var title =item[i].getElementsByTagName("title")[0].firstChild.nodeValue;
+				var link =item[i].getElementsByTagName("link")[0].firstChild.nodeValue;
+				
+				
+				var description =item[i].getElementsByTagName("description")[0].firstChild.nodeValue;
+				
+			//	var d=description.getElementsByTagName("div");
+				
+				str+="<a href='"+link+"'>"+title+"</a><br>"
+				str+=description;
+				str+="<br>";
+				str+="<hr>";
+				
+				
+				console.log(description);
+	
+			
+			
+			
+			}
+	
+		
+			div1.innerHTML=str;
+			
+			
+			}else{
+			
+				
+			}
+			
+			
+			
+		}	
+	}
+	
+	
+
+</script>
+
+
+
+</body>
+</html>

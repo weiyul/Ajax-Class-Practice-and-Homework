@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ajax</title>
+
+
+
+<style type="text/css">
+
+#img1{display:none} /*start to hide the picture  */
+* {
+	font-size:12px;
+	margin:0;
+	padding:0; 
+} 
+fieldset {
+	padding:10px;
+	margin:10px;
+	width:300px;
+	color:#333; 
+	border:#06c dashed 1px;
+} 
+legend {
+	color:#06c;
+	font-weight:800; 
+	background:#fff;
+}
+label { width:100px;}
+</style>
+</head>
+<body>
+<img src="Images/load.gif" id="img1">
+<form name="MyForm">
+<fieldset> 
+  <legend>會員註冊</legend>
+  <table>
+  	<tr>
+  		<td><label for="name">User Name: </label></td>
+  		<td><input type="text" name="UserName" id="name"></td>
+  		<td><a href="" name="checkAccount" id="checkAccount">Check</a></td>
+  		<td><img src="Images/load.gif" id="img1"></td>
+  	</tr>
+  	<tr>
+  		<td><div id="div1"></div></td>
+  		<td></td>
+  		<td></td>
+  		<td></td>
+  	</tr>
+  	<tr>
+  	  	<td><label for="pwd">Password:</label></td>
+  	  	<td><input type="password" name="pwd" id="pwd"></td>
+  	  	<td></td>
+  	  	<td></td>
+  	</tr>
+  	<tr>
+  		<td><label for="email">Email:</label></td>
+  		<td><input type="text" name="email" id="email"></td>
+  		<td></td>
+  		<td></td>
+  	</tr>
+  	<tr>
+  		<td></td>
+  		<td></td>
+  		<td></td>
+  		<td><input type="button" value="Register" id="buttonLoad"></td>
+  	</tr>
+  </table>
+
+</fieldset>
+</form>
+
+
+
+<script>
+
+	var checkClick = document.getElementById("checkAccount");
+
+	checkClick.addEventListener("click", check, false);
+	var xhr=null;
+	
+	
+	function check(){
+		xhr = new XMLHttpRequest();
+		if(xhr!=null){
+			var name=window.document.MyForm.UserName.value;
+			var pwd= document.getElementById("pwd").value;
+			var email= document.getElementById("email").value;
+			xhr.addEventListener("readystatechange", callback, false);
+			
+			var url="AccountCheck.jsp?name="+name;//for get
+			
+			xhr.open("get", url, true);//for get
+
+			xhr.send();//for get
+		}else{
+			alert("cannot creat Ajax object");
+		}
+	}
+	
+	function callback(){
+		if(xhr.readyState==1){
+			docement.getElementById("img1").style.display="inline";
+		}
+		
+		if(xhr.readyState ==4){
+			document.getElementById("img1").style.display="none";
+			var myDiv=document.getElementById("div1");
+			if(xhr.status==200){
+				var data=xhr.responseText;
+				myDiv.innerHTML="<h2>"+data+"</h2>";
+			}else{
+				myDiv.innerHTML="<h1>"+xhr.status+": "+xhr.statusText+"</h1>";
+			}
+		}
+	}
+	
+</script>
+
+</body>
+</html>

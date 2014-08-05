@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<input type="button" value="Load" id="buttonLoad">
+<div id="div1">
+
+</div>
+
+<script>
+var btnClick = document.getElementById("buttonLoad");
+btnClick.addEventListener("click",load,false);
+
+var xhr = null;
+function load(){
+	//步驟一建立XMLHttpRequest物件
+	xhr = new XMLHttpRequest();
+	if(xhr != null){
+		xhr.addEventListener("readystatechange",callback,false);
+		var url = "data.json";
+		xhr.open("get",url,true); //true表示非同步模式
+		xhr.send();
+	}else{
+		alert("無法建立Ajax物件!!");
+	}
+
+}
+
+function callback(){
+	 if(xhr.readyState == 4){
+		var myDiv = document.getElementById("div1");
+		if(xhr.status == 200){
+			//從Server端回傳的JSON資料要轉型成JSON物件才能使用
+			var datas = JSON.parse(xhr.responseText);
+			
+			for(var i=0,max=datas.length;i<max;i++){
+				console.log(datas[i].stitle);
+				console.log(datas[i].xbody);
+				console.log(datas[i].address);
+				console.log(datas[i].info);
+			}
+		}else{
+			myDiv.innerHTML = "<h2>" +  xhr.status + ":" + xhr.statusText + "</h2>";
+		}
+			
+	}
+}
+</script>
+</body>
+</html>
